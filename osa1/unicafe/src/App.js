@@ -1,58 +1,69 @@
+import { useState } from 'react'
+
+const Button = (props) => (
+  <button onClick={props.handleClick}>
+    {props.text}
+  </button>
+)
+
 const App = () => {
-  // const-määrittelyt
-  const course = 'Half Stack application development'
-  const part1 = 'Fundamentals of React'
-  const exercises1 = 10
-  const part2 = 'Using props to pass data'
-  const exercises2 = 7
-  const part3 = 'State of a component'
-  const exercises3 = 14
-  const amount = (exercises1 + exercises2 + exercises3)
+  const [good, setGood] = useState(0)
+  const [neutral, setNeutral] = useState(0)
+  const [bad, setBad] = useState(0)
+
+  const handleGoodClick = () => {
+    setGood(good + 1)
+  }
+
+  const handleNeutralClick = () => {
+    
+    setNeutral(neutral + 1)
+  }
+  const handeBadClick = () => {
+    setBad(bad + 1)
+  }
+//   const handleLeftClick = () =>
+//   setClicks({ ...clicks, left: clicks.left + 1 })
+
+// const handleRightClick = () =>
+//   setClicks({ ...clicks, right: clicks.right + 1 })
+
+
   return (
     <div>
-      <Header course={course} />
-      <Content part1={part1} exercises1={exercises1} part2={part2} 
-      exercises2={exercises2} part3={part3} exercises3={exercises3} />
-      <Total amount={amount} />
+      <div>
+        <Header text="Give Feedback" />
+        <Button handleClick={handleGoodClick} text="good" />
+        <Button handleClick={handleNeutralClick} text="neutral" />
+        <Button handleClick={handeBadClick} text="bad" />
+        <Header text="statistics" />
+        <Stat text="good" val={good} />
+        <Stat text="neutral" val={neutral} />
+        <Stat text="bad" val={bad} />
+      </div>
+      <div>
+
+      </div>
     </div>
   )
 }
 
-const Part = (props) => {
-  return ( 
-    <div>
-      <p>
-      {props.part} {props.exercise}
-      </p>
-    </div>
-  )
-}
-
-const Header = (props) => {
-  return (
-  <>
-    <h1>
-      {props.course}
-    </h1>
-  </>
-  )
-}
-const Content = (props) => {
+const Stat = ({text, val}) => {
   return (
     <>
-       <Part part={props.part1} exercise={props.exercises1} />
-        <Part part={props.part2} exercise={props.exercises2} />
-        <Part part={props.part3} exercise={props.exercises3} />
+      <p>
+        {text} {val}
+      </p>
     </>
   )
-
 }
-const Total = (props) => {
-  return ( 
+
+const Header = ({text}) => {
+  return (
     <>
-    <p>
-      Number of exercises {props.amount}
-      </p>
+    <h1>
+      {text}
+    </h1>
     </>
   )
 }
