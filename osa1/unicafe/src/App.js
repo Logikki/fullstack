@@ -1,11 +1,5 @@
 import { useState } from 'react'
 
-const Button = (props) => (
-  <button onClick={props.handleClick}>
-    {props.text}
-  </button>
-)
-
 const App = () => {
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
@@ -16,18 +10,15 @@ const App = () => {
   }
 
   const handleNeutralClick = () => {
-    
     setNeutral(neutral + 1)
   }
   const handeBadClick = () => {
     setBad(bad + 1)
   }
-//   const handleLeftClick = () =>
-//   setClicks({ ...clicks, left: clicks.left + 1 })
-
-// const handleRightClick = () =>
-//   setClicks({ ...clicks, right: clicks.right + 1 })
-
+  const all = bad + good + neutral
+  const average = good/all
+  const positive = (good/(bad+good))*100 + '%'
+  const stats = [all,average,positive, good, bad, neutral]
 
   return (
     <div>
@@ -36,10 +27,8 @@ const App = () => {
         <Button handleClick={handleGoodClick} text="good" />
         <Button handleClick={handleNeutralClick} text="neutral" />
         <Button handleClick={handeBadClick} text="bad" />
-        <Header text="statistics" />
-        <Stat text="good" val={good} />
-        <Stat text="neutral" val={neutral} />
-        <Stat text="bad" val={bad} />
+        <Statistics stats={stats} />
+        
       </div>
       <div>
 
@@ -48,12 +37,45 @@ const App = () => {
   )
 }
 
-const Stat = ({text, val}) => {
+const Statistics = ({stats}) => {
+
+  const all = stats[0]
+  const average = stats[1]
+  const positive = stats[2]
+  const good = stats[3]
+  const bad = stats[4]
+  const neutral = stats[5]
+
+  if (all !== 0 ) {
+  return ( 
+    <>
+        <Header text="statistics" />
+        <table>
+        <StatisticLine text="good" val={good} />
+        <StatisticLine text="neutral" val={neutral} />
+        <StatisticLine text="bad" val={bad} />
+        <StatisticLine text="all" val={all} />
+        <StatisticLine text="average" val={average}  />
+        <StatisticLine text="positive" val={positive} />
+        </table>
+        </>
+  )
+
+  }
   return (
     <>
-      <p>
-        {text} {val}
-      </p>
+    <Header text="statistics" />
+    </>
+  )
+
+}
+
+const StatisticLine = ({text, val}) => {
+  return (
+    <>
+    <tbody>
+    <tr><td>{text}</td><td>{val}</td></tr>
+      </tbody>
     </>
   )
 }
@@ -67,5 +89,11 @@ const Header = ({text}) => {
     </>
   )
 }
+
+const Button = (props) => (
+  <button onClick={props.handleClick}>
+    {props.text}
+  </button>
+)
 
 export default App
