@@ -9,7 +9,7 @@ const ShowPersons = ({persons, haku}) => {
     )}
     else {
         var filtteroitu = persons.reduce(function(result, option) {
-            if (option.name.includes(haku)) {
+            if (option.name.toLowerCase().includes(haku.toLowerCase())) {
               return result.concat(option);
             }
             return result;
