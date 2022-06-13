@@ -13,10 +13,18 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [newSearch, setNewSearch] = useState('')
 
+  //poisto
   const handleRemOf =(id)=> {
-      const filtered = persons.filter((person)=>person.id != id)
-      console.log("moi" + filtered)
-  }
+    if (window.confirm(`are you sure you want to delete person ${id}`)) {
+      numberService
+        .rem(id)
+        .then(response => { // ei tehdä tällä mitään
+          const filtered = persons.filter((person)=>person.id != id)
+          setPersons(filtered)
+  })
+}
+
+}
 
   useEffect(() => {
     console.log('effect')
@@ -27,18 +35,20 @@ const App = () => {
         setPersons(response.data)
       })
   }, [])
-  console.log('render', persons.length, 'persons')
+  
 
   const addPerson = (event) => {
     event.preventDefault()
-    const personObj = { 
-      name : newName, 
-      number : newNumber}
-
+    
     const found = persons.map(person => person.name === newName) //tehdään booleanlista onko vastaavaa niemä
     
-    // jos ei ole listassa lisätään listaan
-    if (!found.includes(true)) { 
+    // jos ei ole listassa lisätään listaan. 
+    if (!found.includes(true)) {
+      const personObj = { 
+        id : Math.floor(Math.random() * 1000), //random id väliltä 0 < 1000
+        name : newName, 
+        number : newNumber}
+
       numberService
       .create(personObj)
       .then(returnedNumber => {
@@ -46,28 +56,38 @@ const App = () => {
     setNewName('')
     setNewNumber('')
       })
-    
     }
-    else {
-    alert(`${newName} is already added to phonebook`)
+    //muokataan vanhaa 
+    else if (window.confirm(`${newName} already added to phonebook, replace old number with new one?`)) {
+      changePerson()
     }
   }
   
+  const changePerson = () => {
+    const person = persons.find(p => p.name === newName)
+      console.log("sama henkilo on: " + JSON.stringify(person))
+
+      const changedPerson = {...person, number : newNumber}
+      numberService
+        .update(person.id, changedPerson)
+        .then(returnedPerson => {
+          setPersons(persons.map(p => p.name !== newName ? p : returnedPerson))
+        })
+  }
+
   const handleNameChange = (event) => {
-    console.log(event.target.value)
     setNewName(event.target.value)
   }
 
   const handleNumberChange = (event) => {
-    console.log(event.target.value)
     setNewNumber(event.target.value)
   }
 
   const handleSearchChange = (event) => {
-    console.log(event.target.value)
     setNewSearch(event.target.value)
   }
 
+  
   return (
     <div>
       <h2>Phonebook</h2>

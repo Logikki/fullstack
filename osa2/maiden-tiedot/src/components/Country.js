@@ -1,5 +1,10 @@
-const Country = ({country}) =>
-    <>
-    <p>{country.name}</p>
-    </>
+const Country = ({country}) => {
+    return(
+    country.name
+    )
+}
+
+
+  
+
 export default Country

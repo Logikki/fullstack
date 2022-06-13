@@ -1,35 +1,25 @@
 import Country from "./Country"
+import SingleCountry from "./SingleCountry"
 
-const ShowCountries = ({countries}) => {
+const ShowCountries = ({countries, setCountries}) => {
     
+
     if (countries.length < 10 && countries.length > 1) { 
         return(
-            <>moro</>,
     countries.map(country => console.log(country.languages) ||
+        <div>
         <Country key={country.name} country={country}/>
+        <Button key={country.latlng[0]} value={country} handleClick={()=> setCountries([country])} text="select"/>
+        </div>
         )    
     )}
     else if (countries.length === 1) {
-        let [c] = countries
-        let flagURL = c.flags.png
-        console.log(flagURL)
-        return (
-            <>
-            <h2>{c.name}</h2>
-            <p>Capital {c.capital} </p>
-            <p>Area {c.area} </p>
-            <h3>Languages</h3>
-            
-            <ul>
-            {c.languages.map(l => 
-                    <li key={l.name}> {l.name} </li>
-                )}
-            </ul>
-            <img src={flagURL} alt="lippu" />
-
-            </>
-
-            )
+        let [c] = countries    
+        return(
+        <>
+        <SingleCountry c={c} />
+        </>
+        )
     }
     else {
         
@@ -38,6 +28,10 @@ const ShowCountries = ({countries}) => {
         )
     }
 }
-
+const Button = (props) => (
+    <button onClick={props.handleClick}>
+      {props.text}
+    </button>
+    )
 
 export default ShowCountries

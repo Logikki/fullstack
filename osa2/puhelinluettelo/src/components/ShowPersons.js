@@ -6,9 +6,7 @@ const ShowPersons = ({persons, haku, handleRemOf}) => {
     if (haku=='') { 
         return(
     persons.map(person =>
-        <div>
-        <Henkilo key={person.name} person={person}/>
-        </div>
+        <Henkilo key={person.id} person={person} handleClick={()=>handleRemOf(person.id)}/>
         )    
     )}
     else {
@@ -19,7 +17,7 @@ const ShowPersons = ({persons, haku, handleRemOf}) => {
             return result;
           }, []);
 
-        console.log(filtteroitu)
+        
         return (    
             filtteroitu.map(person => 
                 <Henkilo key={person.id} person={person} handleClick={()=>handleRemOf(person.id)}/>
