@@ -3,6 +3,8 @@ import FilterView from './components/FilterView'
 import ShowPersons from './components/ShowPersons'
 import PersonForm from './components/PersonForm'
 import axios from 'axios'
+import numberService from './services/numbers'
+
 
 
 const App = () => {
@@ -10,6 +12,11 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newSearch, setNewSearch] = useState('')
+
+  const handleRemOf =(id)=> {
+      const filtered = persons.filter((person)=>person.id != id)
+      console.log("moi" + filtered)
+  }
 
   useEffect(() => {
     console.log('effect')
@@ -29,13 +36,17 @@ const App = () => {
       number : newNumber}
 
     const found = persons.map(person => person.name === newName) //tehdään booleanlista onko vastaavaa niemä
-    console.log(found)
-
+    
     // jos ei ole listassa lisätään listaan
     if (!found.includes(true)) { 
-    setPersons(persons.concat(personObj))
+      numberService
+      .create(personObj)
+      .then(returnedNumber => {
+        setPersons(persons.concat(personObj))
     setNewName('')
     setNewNumber('')
+      })
+    
     }
     else {
     alert(`${newName} is already added to phonebook`)
@@ -67,7 +78,7 @@ const App = () => {
         />
       <h2>Numbers</h2>
       <div>
-        <ShowPersons persons={persons} haku={newSearch} />
+        <ShowPersons persons={persons} haku={newSearch} handleRemOf={handleRemOf} />
       </div>
     </div>
   )

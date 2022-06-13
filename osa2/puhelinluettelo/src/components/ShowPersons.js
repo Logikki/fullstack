@@ -1,10 +1,14 @@
 import Henkilo from "./Henkilo"
 
-const ShowPersons = ({persons, haku}) => {
+const ShowPersons = ({persons, haku, handleRemOf}) => {
+    
+
     if (haku=='') { 
         return(
     persons.map(person =>
+        <div>
         <Henkilo key={person.name} person={person}/>
+        </div>
         )    
     )}
     else {
@@ -18,7 +22,7 @@ const ShowPersons = ({persons, haku}) => {
         console.log(filtteroitu)
         return (    
             filtteroitu.map(person => 
-                <Henkilo key={person.name} person={person}/>
+                <Henkilo key={person.id} person={person} handleClick={()=>handleRemOf(person.id)}/>
                 )
                 )}
     }

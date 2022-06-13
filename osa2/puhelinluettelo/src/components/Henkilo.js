@@ -1,4 +1,7 @@
-const Henkilo = ({person}) => 
-    <p>{person.name} {person.number}</p>
+const Henkilo = ( {person, handleClick} ) => 
+    <>{person.name} {person.number}
+    <button onClick={handleClick}>delete</button>
+    </>
+
 
 export default Henkilo
