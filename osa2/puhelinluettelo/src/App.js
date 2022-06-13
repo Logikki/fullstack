@@ -2,9 +2,8 @@ import { useState, useEffect } from 'react'
 import FilterView from './components/FilterView'
 import ShowPersons from './components/ShowPersons'
 import PersonForm from './components/PersonForm'
-import axios from 'axios'
 import numberService from './services/numbers'
-
+import Notification from './components/Notification'
 
 
 const App = () => {
@@ -12,6 +11,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newSearch, setNewSearch] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
 
   //poisto
   const handleRemOf =(id)=> {
@@ -22,17 +22,23 @@ const App = () => {
           const filtered = persons.filter((person)=>person.id != id)
           setPersons(filtered)
   })
+  setErrorMessage(
+    `Deleted person with id ${id}`
+  )
+  setTimeout(() => {
+    setErrorMessage(null)
+  }, 5000)
 }
 
 }
 
   useEffect(() => {
     console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
+    numberService
+    .getAll()
       .then(response => {
         console.log('promise fulfilled')
-        setPersons(response.data)
+        setPersons(response)
       })
   }, [])
   
@@ -53,6 +59,12 @@ const App = () => {
       .create(personObj)
       .then(returnedNumber => {
         setPersons(persons.concat(personObj))
+        setErrorMessage(
+          `Added ${personObj.name}`
+        )
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
     setNewName('')
     setNewNumber('')
       })
@@ -72,6 +84,21 @@ const App = () => {
         .update(person.id, changedPerson)
         .then(returnedPerson => {
           setPersons(persons.map(p => p.name !== newName ? p : returnedPerson))
+          setErrorMessage(
+            `Modfied ${person.name}`
+          )
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
+        })
+        .catch(error => {
+          setErrorMessage(
+            `Person '${person.name}' was already removed from server`
+          )
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
+          setPersons(persons.filter(p => p.name !== newName))
         })
   }
 
@@ -91,6 +118,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={errorMessage}/>
       <FilterView newSearch={newSearch} handleSearchChange={handleSearchChange} />
         <h2>add a new</h2>
         <PersonForm addPerson={addPerson} newName={newName} newNumber={newNumber} 
