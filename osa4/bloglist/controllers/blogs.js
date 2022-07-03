@@ -1,22 +1,19 @@
+const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
-const express = require('express')
-const Blogs = express()
 
 
-Blogs.delete('/api/blogs/:id', async (req, res) => {
+blogsRouter.delete('/:id', async (req, res) => {
   await Blog.findByIdAndRemove(req.params.id)
   res.status(204).end()
 })
 
-Blogs.get('/api/blogs', (request, response) => {
-  Blog
+blogsRouter.get('/', async (request, response) => {
+  const blogs = await Blog
     .find({})
-    .then(blogs => {
-      response.json(blogs)
-    })
+  response.json(blogs)
 })
 
-// Blogs.get('/api/blogs/:id', async (request, response) => {
+// blogsRouter.get('/api/blogsRouter/:id', async (request, response) => {
 //   const blog = await Blog.findById(request.params.id)
 //   if (blog) {
 //     response.json(blog.toJSON())
@@ -25,22 +22,21 @@ Blogs.get('/api/blogs', (request, response) => {
 //   }
 // })
   
-Blogs.post('/api/blogs', (request, response) => {
-  if (!request.body.url || !request.body.title) {
+blogsRouter.post('/', async (request, response) => {
+  const body = request.body
+  if (!body.url || !body.title) {
     response.status(400).send('Bad request')
   }
   else {
     const blog = new Blog(request.body)
   
-    blog
-      .save()
-      .then(result => {
-        response.status(201).json(result)
-      })
+    const savedBlog = await blog.save()
+    response.status(201).json(savedBlog)
+      
   }
 })
 
-Blogs.put('/api/blogs/:id', (req, res) => {
+blogsRouter.put('/:id', (req, res) => {
   const body = req.body
 
   const blog = {
@@ -49,6 +45,7 @@ Blogs.put('/api/blogs/:id', (req, res) => {
     url: body.url,
     likes: body.likes
   }
+
   Blog.findByIdAndUpdate(req.params.id, blog, {new : true})
     .then(updatedBlog => {
       res.json(updatedBlog)
@@ -57,4 +54,4 @@ Blogs.put('/api/blogs/:id', (req, res) => {
 
 })
 
-module.exports = Blogs
+module.exports = blogsRouter
