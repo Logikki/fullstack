@@ -23,8 +23,19 @@ const fauvoriteBlog = blogs => {
     : blogs.reduce(reducer, blogs[0]) 
 }
 
+const mostBlogs = blogs => {
+  const authors = blogs.reduce((curr, blog) => {
+    return curr.includes(blog.author)
+      ? curr
+      : curr.concat({author: blog.author, likes: 0})
+  },[])
+  blogs.map(blog=> authors.blog.author.likes = authors.blog.author.likes + blog.likes)
+
+}
+
 module.exports = {
   dummy,
   totalLikes,
-  fauvoriteBlog
+  fauvoriteBlog,
+  mostBlogs
 }
