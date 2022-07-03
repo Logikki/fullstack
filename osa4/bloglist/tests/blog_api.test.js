@@ -18,10 +18,9 @@ describe('Blog api tests', () => {
     await api.post('/api/blogs')
       .send(helper.blogWithoutLikes)
       .expect(201)
-    const response = await api.get('/api/blogs')
-    const allBlogs = response.body
+    const response = await helper.blogsInDb()
 
-    allBlogs.map(blog => {
+    response.map(blog => {
       if(blog.id === helper.blogWithoutLikes.id) {
         expect(blog.likes).toEqual(0)
       }
@@ -30,14 +29,14 @@ describe('Blog api tests', () => {
   }, 10000)
 
   test('all blogs are returned', async () => {
-    const response = await api.get('/api/blogs')
+    const response = await helper.blogsInDb()
     
-    expect(response.body).toHaveLength(helper.blogs.length)
+    expect(response).toHaveLength(helper.blogs.length)
   })
   
   test('ID exists', async () => {
-    const response = await api.get('/api/blogs') 
-    expect(response.body[0].id).toBeDefined()
+    const response = await helper.blogsInDb() 
+    expect(response[0].id).toBeDefined()
   })
   
   test('Adding a blog increases blog count by one', async () => {
@@ -50,14 +49,14 @@ describe('Blog api tests', () => {
         likes: 123,
       }
     ]
-    const initialResponse = await api.get('/api/blogs')
+    const initialResponse = await helper.blogsInDb()
     await api
       .post('/api/blogs')
       .send(oddBlog2)
       .expect(201)
 
-    const afterResponse = await api.get('/api/blogs')
-    expect(initialResponse.body).toHaveLength(afterResponse.body.length - 1)
+    const afterResponse = await helper.blogsInDb()
+    expect(initialResponse).toHaveLength(afterResponse.length - 1)
   })
 
   test('blogs are returned as json', async () => {
@@ -75,17 +74,17 @@ describe('Blog api tests', () => {
   })
 
   test('Deletion of a blog decreases blog count by one', async () => {
-    const initialBlogs = await api.get('/api/blogs').expect(200)
-    const blogToDelete = initialBlogs.body[0]
+    const initialBlogs = await helper.blogsInDb()
+    const blogToDelete = initialBlogs[0]
     await api
       .delete(`/api/blogs/${blogToDelete.id}`).expect(204)
-    const afterDeletion = await api.get('/api/blogs').expect(200)
-    expect(initialBlogs.body).toHaveLength(afterDeletion.body.length + 1 )
+    const afterDeletion = await helper.blogsInDb()
+    expect(initialBlogs).toHaveLength(afterDeletion.length + 1 )
   })
 
   test('Blog modification', async () => {
-    const initial = await api.get('/api/blogs').expect(200)
-    const notModified = initial.body[0]
+    const initial = await helper.blogsInDb()
+    const notModified = initial[0]
     const newBlog = { ...notModified, likes : notModified.likes - 1}
 
     const modified = await api.put(`/api/blogs/${notModified.id}`)
@@ -93,8 +92,8 @@ describe('Blog api tests', () => {
     expect(modified.body.likes).toEqual(notModified.likes-1)
 
     //varmistus
-    const initialmod = await api.get('/api/blogs').expect(200)
-    const likesModified = initialmod.body[0]
+    const initialmod = await helper.blogsInDb()
+    const likesModified = initialmod[0]
     expect(likesModified.likes).toEqual(notModified.likes-1)
   })
 })
@@ -163,7 +162,7 @@ describe('when there is initially one user at db', () => {
       .expect(400)
     expect(res.body.error).toContain('password must be atleast 3 characters long')
   })
-  
+
   test('creation fails with a proper statuscode if password is undefined', async () => {
     const newUser = {
       username: 'okka',

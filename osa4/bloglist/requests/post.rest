@@ -1,8 +1,9 @@
 POST http://localhost:3003/api/blogs 
 Content-Type: application/json
+Authorization: bearer eyJhbiOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImxnayIsImlkIjoiNjJjMTY4MDc4MTBjZmI3ZWQ5YjI5MDViIiwiaWF0IjoxNjU2ODQyNjYxfQ.W9B-_xtwIxBeS9PqDKNtLjmQhH-m_U85TDOodpF6qBk
 
 {
-  "title": "eka",
+  "title": "authorization testii",
   "author": "romppa",
   "url": "xd.net",
   "likes": 123
