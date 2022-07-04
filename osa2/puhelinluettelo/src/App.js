@@ -19,7 +19,7 @@ const App = () => {
       numberService
         .rem(id)
         .then(response => { // ei tehdä tällä mitään
-          const filtered = persons.filter((person)=>person.id != id)
+          const filtered = persons.filter((person)=>person.id !== id)
           setPersons(filtered)
   })
   setErrorMessage(
