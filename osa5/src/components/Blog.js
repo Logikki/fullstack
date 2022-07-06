@@ -1,13 +1,13 @@
-import { useState, useEffect } from "react"
-const Blog = ({blog, handleLike, handleRemove, userID}) => {
+import { useState, useEffect } from 'react'
+const Blog = ({ blog, handleLike, handleRemove, userID }) => {
   const [showButton, setShowButton] = useState(false)
 
   useEffect(() => {
     setShowButton(userID !== blog.user)
-   })
+  })
 
-  const handleLikeButton = () => {
-    const updatedBlog = {...blog, likes : blog.likes + 1}
+  const handleLikeButton = () => {
+    const updatedBlog = { ...blog, likes : blog.likes + 1 }
     handleLike(updatedBlog)
   }
   return (
@@ -18,10 +18,10 @@ const Blog = ({blog, handleLike, handleRemove, userID}) => {
       </div>
       <div>{blog.author}</div>
       {showButton ?
-      <div><button value={blog.id} onClick={handleRemove}>remove</button></div>
-      : <></>
-}
-    </div>  
+        <div><button value={blog.id} onClick={handleRemove}>remove</button></div>
+        : <></>
+      }
+    </div>
   )
 }
 
